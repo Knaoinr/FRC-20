@@ -1,189 +1,123 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.cameraserver.CameraServer;
-import frc.robot.userinterface.UserInterface;
-import frc.robot.subsystems.Subsystems;
-import frc.robot.commands.*;
-import edu.wpi.cscore.VideoSink;
-import edu.wpi.cscore.VideoSource;
+// import edu.wpi.first.wpilibj.command.Scheduler;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.cscore.UsbCamera;
+// import edu.wpi.first.cameraserver.CameraServer;
+// import frc.robot.userinterface.UserInterface;
+// import frc.robot.subsystems.Subsystems;
+// import frc.robot.commands.*;
+// import edu.wpi.cscore.VideoSink;
+// import edu.wpi.cscore.VideoSource;
 
 /**
  * The main Robot class whence all things come.
  */
 public class Robot extends TimedRobot {
 
-    //TELEOP
+    // Your variables here will represent any cameras you plan to use, as well as any extra variables you need.
 
-    private boolean oldBroken = false;
-    private boolean in = false;
-    private int counter = 0;
-
-    private boolean oldTriggerOn = false;
-
-    //SENSORS/CAMERAS
-
-    private VideoSink switchedCamera;
-    private UsbCamera camera1;
-    private UsbCamera camera2;
-
+    // This is the constructor!
     public Robot() {
         super(0.08);
     }
 
+    // Called when robot turned on
     public void robotInit() {
-        //set which bot - either COMPETITION, PRACTICE, or TOASTER
-        RobotMap.setBot(RobotMap.BotNames.COMPETITION);
-        System.out.println("Initializing " + RobotMap.botName + "\n");
 
-        //camera setup
-        camera1 = CameraServer.getInstance().startAutomaticCapture(0);
-        camera2 = CameraServer.getInstance().startAutomaticCapture(1);
-        camera1.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
-        camera2.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen);
+        /*
+        Here is where you should initialize everything, rather than the constructor.
+        Once you've made variables for this class above (i.e. cameras), do that here!
 
-        switchedCamera = CameraServer.getInstance().addSwitchedCamera("Camera feeds");
-        switchedCamera.setSource(camera1);
+        Cameras aren't constructed with the typical "new Camera()" format, but rather by the method -> CameraServer.getInstance().startAutomaticCapture(port)
+        where port is the port number of the camera (0 for the 1st camera, 1 for the 2nd, etc. depending on how many we use).
+        Then, you'll want to call camera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen) for each camera to keep getting the video input.
 
-        //drive settings
-        Subsystems.driveBase.cheesyDrive.setSafetyEnabled(false);
-        
-        //driver controls (buttons)
-        UserInterface.driverController.LB.whenPressed(new SwitchCameras(switchedCamera, camera1, camera2)); //LBump: Toggle cameras
-        UserInterface.driverController.RB.whenPressed(new SwitchGears()); //RBump: Toggle slow/fast mode
+        Besides that, you'll want to do a few things to set up your robot:
+        - Once you've made subsystems:
+            1. Set any initial positions (e.g. in 2018, we set the guillotine to lowest position).
+               This will physically move the robot to its starting configuration.
+        - Once you've made the user interface & methods for them:
+            1. Connect buttons with commands, e.g. -> (insert button).whenPressed(new IntakeGrab());
+            Note that this only used for commands that should be executed on a button press or while a button is held.
+            You should have some sense of what the buttons do, e.g. for 2018
 
-        //operator controls (buttons)
-        UserInterface.operatorController.X.whenPressed(new IntakeExtendRetract()); //X: Toggles extend/retract intake
-        UserInterface.operatorController.LS.whileHeld(new Vomit()); //Left small: SPIT WITH ALL YOU HAVE
-        UserInterface.operatorController.RS.whenPressed(new ClearCellCount()); //Right small: set cell count to 0
-        UserInterface.operatorController.RB.whenPressed(new StartFlywheel(0.7)); //start flywheel early
-        UserInterface.operatorController.RB.whenPressed(new HelixTurn(0.3)); //start flywheel early
+            "intake arms close: A
+            intake arms open: B
+            kicker retracts: X
+            kicker kicks out: Y
+            entire programmed sequence: START
+            Right trigger: intake wheels
+            Left trigger: outake wheels
+            Left joystick: rotation
+            Right joystick: forwards and backwards
+            Ensure that guillotine is completely down before beginning"
 
-        //setup Shuffleboard interface & default auto
-        ShuffleboardControl.layoutShuffleboard();
-        ShuffleboardControl.setupAutonomous();
+            (hopefully we wrote our version down somewhere)
+            Which of these buttons should you set up here?
+        */
     }
 
+    /*
+    Now, you'll have up to 7 more methods: combinations of robot/disabled/autonomous/teleop and init/periodic.
+    Init methods are run at the beginning of a period, while periodic methods are run over and over during a period.
+    The robot period runs the entire time the robot is on. The disabled, autonomous, and teleop periods only run during those sections.
+    Follow these guidelines for each:
+    - If you do something in every periodic, put it in robotPeriodic() and it'll be continuously run all the time
+    - All inits remove all commands in the scheduler
+    - All periodics run commands in the scheduler and print data to Shuffleboard (see bottom of file)
+    - Disabled stops robot function to a reasonable extent
+    - Auto init includes starting auto commands
+    - Teleop periodic includes motor speed control
+    */
+
     public void robotPeriodic() {
-        Scheduler.getInstance().run();
-        ShuffleboardControl.printDataToShuffleboard();
+        // Scheduler.getInstance().run();
+        //...
     }
 
     public void disabledInit() {
-        System.out.println("Disabled Initialized");
-        Scheduler.getInstance().removeAll();
+        // System.out.println("Disabled Initialized");
+        // Scheduler.getInstance().removeAll();
+        //...
     }
 
     public void disabledPeriodic() {
-        ShuffleboardControl.updateAutonomous();
+        //...
     }
 
     public void autonomousInit() {
-        System.out.println("Autonomous Initalized");
-        Scheduler.getInstance().removeAll();
+        // System.out.println("Autonomous Initalized");
+        // Scheduler.getInstance().removeAll();
 
-        ShuffleboardControl.updateAutonomous();
-        ShuffleboardControl.getAutonomous().start();
+        //Start any autonomous command group with -> (insert name).start();
+        //...
     }
 
     public void autonomousPeriodic() {
-        countingAuto();
+        //...
     }
 
     public void teleopInit() {
-        System.out.println("TeleOp Initalized");
-        Scheduler.getInstance().removeAll();
-
-        Scheduler.getInstance().add(new ShootStop()); //in case was disabled while spinning
-
-        switchedCamera.setSource(camera1);
-        RobotMap.isFirstCamera = true;
+        // System.out.println("TeleOp Initalized");
+        // Scheduler.getInstance().removeAll();
+        //...
     }
 
     public void teleopPeriodic() {
-        countingTeleop();
-
-        //wait for intake->helix sequence
-        if (in && counter < 9) {
-            counter++;
-        } else if (in) {
-            in = false;
-            counter = 0;
-        }
-
-        if (UserInterface.operatorController.LS.get()) {
-            return; //remove functionality of spinning while vomiting
-        }
-
-        //intake cells in/out
-        if (UserInterface.operatorController.getRightJoystickY() >= 0.4) {
-            Subsystems.intake.setIntakeMotors(0.85);
-        } else if (UserInterface.operatorController.getRightJoystickY() <= -0.4) {
-            Subsystems.intake.setIntakeMotors(-0.85);
-        } else {
-            Subsystems.intake.stopIntakeMotors();
-        }
-
-        //flyboi control
-        boolean isTriggerOn = UserInterface.operatorController.getRightTrigger() >= 0.4;
-        if (isTriggerOn && !oldTriggerOn) { //if trigger was just pressed
-            Scheduler.getInstance().add(new Shoot());
-            System.out.println("Shooter speed is " + Subsystems.flyboi.getPower());
-        } else if (!isTriggerOn && oldTriggerOn) { //if trigger was just released
-            Scheduler.getInstance().add(new ShootStop());
-        }
-        oldTriggerOn = isTriggerOn;
-
-        //moves helix in/out
-        if (UserInterface.operatorController.getPOVAngle() == 0) {
-            Subsystems.helix.setHelixMotors(0.9);
-        } else if (UserInterface.operatorController.getPOVAngle() == 180) {
-            Subsystems.helix.setHelixMotors(-0.9);
-        } else if (UserInterface.operatorController.Y.get()) {
-            Subsystems.helix.setHelixMotors(-0.5);
-        } else if (in) {
-            Subsystems.helix.setHelixMotors(0.75);
-        } else if (!isTriggerOn) {
-            Subsystems.helix.setHelixMotors(0);
-        }
+        /*
+        Here you'll manage all the robot movements that aren't already covered in the button code in
+        robotInit() or contained in TankDrive. Once you've made your subsystems and user interface,
+        find out which parts need to be moved!
+        */
     }
 
-    /**
-     * Counts cells intaken in auto.
-     */
-    private void countingAuto() {
-        boolean isBroken = Subsystems.intake.getCellEntered();
+    /*
+    Here, you'll want to write a private void method that prints the values of variables to Shuffleboard.
+    To do this, the general method is -> SmartDashboard.putNumber("Name", Something.getValue());
+    However, there are also methods like putBoolean rather than putNumber that you can use.
+    Although these are SmartDashboard methods, they work for getting information to Shuffleboard in a simpler way than Shuffleboard's own methods.
+    */
 
-        if (isBroken && !oldBroken) {
-            Subsystems.helix.cellCount++;
-        }
-        oldBroken = isBroken;
-    }
-
-    /**
-     * Counts cells intaken or expelled in teleop.
-     */
-    private void countingTeleop() {
-        boolean isBroken = Subsystems.intake.getCellEntered();
-
-        if (UserInterface.operatorController.getRightJoystickY() >= 0.4) { //if is intaking
-            if (isBroken && !oldBroken) {
-                Subsystems.helix.cellCount++;
-                System.out.println("BALL INTAKEN, " + Subsystems.helix.cellCount + " BALLS CONTAINED");
-            } else if (oldBroken) {
-                in = true;
-                counter = 0;
-            }
-        }
-        if (UserInterface.operatorController.getRightJoystickY() <= -0.4) { //if is outtaking
-            if (!isBroken && oldBroken) {
-                Subsystems.helix.cellCount--;
-                System.out.println("BALL OUTTAKEN, " + Subsystems.helix.cellCount + " BALLS REMAINING");
-            }
-        }
-
-        oldBroken = isBroken;
-    }
 }
