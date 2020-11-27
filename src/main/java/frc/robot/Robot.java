@@ -60,7 +60,7 @@ public class Robot extends TimedRobot {
     }
 
     /*
-    Now, you'll have up to 7 more methods: combinations of robot/disabled/autonomous/teleop and init/periodic.
+    Now, you'll have up to 7 more methods, all automatically called by TimedRobot: combinations of robot/disabled/autonomous/teleop and init/periodic.
     Init methods are run at the beginning of a period, while periodic methods are run over and over during a period.
     The robot period runs the entire time the robot is on. The disabled, autonomous, and teleop periods only run during those sections.
     Follow these guidelines for each:

@@ -1,63 +1,47 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import edu.wpi.first.wpilibj.DigitalInput;
-import frc.robot.RobotMap;
+// import edu.wpi.first.wpilibj.DoubleSolenoid;
+// import com.ctre.phoenix.motorcontrol.ControlMode;
+// import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+// import edu.wpi.first.wpilibj.DigitalInput;
+// import frc.robot.RobotMap;
 
 /**
  * The intake. Includes intake motors and pistons for intake extension.
  */
 public class Intake extends Subsystem {
 
-    public WPI_TalonSRX intakeMotor;
-    public DoubleSolenoid intakeExtension;
-    public DigitalInput intakeBeamBreak;
+    // private WPI_TalonSRX intakeMotor;
+    // private DoubleSolenoid intakeExtension;
+    // private DigitalInput intakeBeamBreak;
 
     public Intake() {
+        // Names subsystem
         super("Intake");
-        this.intakeMotor = new WPI_TalonSRX(RobotMap.intakeMotor);
-        this.intakeBeamBreak = new DigitalInput(RobotMap.intakeBeamBreak);
-        this.intakeExtension = new DoubleSolenoid(RobotMap.intakeExtensionOut, RobotMap.intakeExtensionIn);
+        // You'll want to initialize everything above here within this constructor. The contructor for all of them is Class(int port), except
+        // double solonoids, which are DoubleSolenoid(int outwardPort, int inwardPort).
     }
 
+    //This method is empty in all subsystems besides DriveBase!
     protected void initDefaultCommand() {}
 
-    /**
-     * Spins intake motors.
-     * @param power The power at which the intake motors are set [-1 to 1].
-     */
-    public void setIntakeMotors(double power) {
-        intakeMotor.set(ControlMode.PercentOutput, power);
-    }
+    /*
+    Now, you'll need to make methods to manipulate whatever subsystem you end up making.
+    For example, if you were creating the 2020 robot, you'd need to make the following methods:
+    - setIntakeMotors(double power) -> sets intakeMotor to speed
+    - stopIntakeMotors() -> sets intakeMotor to 0
+    - intakeExtend() -> sets intakeExtension to forward
+    - intakeRetract() -> sets intakeExtension to reverse
+    - getCellEntered() -> returns whether the intake beam break is currently triggered
 
-    /**
-     * Stops intake motors.
-     */
-    public void stopIntakeMotors() {
-        intakeMotor.set(ControlMode.PercentOutput, 0.0);
-    }
+    To set the value of a
+    - talon, use -> (talon).set(ControlMode.PercentOutput, double outputValue);
+                 e.g. motor.set(ControlMode.PercentOutput, 0.55);
+    - double solenoid, use -> (solenoid).set(DoubleSolenoid.Value.kForward or kReverse);
 
-    /**
-     * Extends the intake (intake down).
-     */
-    public void intakeExtend() {
-        intakeExtension.set(DoubleSolenoid.Value.kForward);
-    }
-
-    /**
-     * Retracts the intake (intake up).
-     */
-    public void intakeRetract() {
-        intakeExtension.set(DoubleSolenoid.Value.kReverse);
-    }
-
-    /**
-     * @return Whether the intake beam break currently detects something.
-     */
-    public boolean getCellEntered() {
-        return !intakeBeamBreak.get();
-    }
+    To get the value of a
+    - digital input, such as the switches, use -> (input).get();
+    - analog input, such as the ultrasound, use -> (input).getAverageVoltage();
+    */
 }

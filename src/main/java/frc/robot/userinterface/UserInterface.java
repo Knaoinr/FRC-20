@@ -1,21 +1,16 @@
 package frc.robot.userinterface;
 
-import frc.robot.RobotMap;
+// import frc.robot.RobotMap;
 
 /**
  * Contains instances of all UI elements.
  */
 public class UserInterface {
 
-    /**
-     * <p>The driver controller (white).</p>
-     * Used to control the drive base alone in teleop.
-     */
-    public static final RumbleXboxController driverController = new RumbleXboxController(RobotMap.driverXboxController);
-    /**
-     * <p>The operator controller (black).</p>
-     * Used to control all subsystems except the drive base in teleop.
-     */
-    public static final RumbleXboxController operatorController = new RumbleXboxController(RobotMap.operatorXboxController);
+    /*
+    This class contains all the objects used to control the robot.
+    Right now, we're using two xbox controllers - the driver controller and operator controller.
+    Make public static final instances of each controller! You'll be able to access these anywhere.
+    */
 
 }
