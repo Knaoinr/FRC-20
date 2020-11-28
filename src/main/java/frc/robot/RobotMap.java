@@ -5,11 +5,42 @@ package frc.robot;
  */
 public class RobotMap {
 
-    /*
-    Here go all the ports used throughout the robot (besides those for cameras)!
-    They should all be public (-> can see outside RobotMap), static (-> accessible with RobotMap.portName), and final (-> constant/read only), e.g. public static int leftMasterMotor = 40;
-    We'll assume that we only have 1 robot here, the competition bot, so there will only be 1 set of ports.
-    Make sure that this reflects the ports document at all times!!!!!!!!!
-    */
+    // Speed & rotation caps
+
+    public static final double speedCap = 0.7;
+    public static final double rotationCap = 0.4;
+
+    // Motor controller ports
+
+    public static final int leftFrontMotor = 23;
+    public static final int leftMiddle = 15;
+    public static final int leftRearMotor = 4;
+    public static final int rightFrontMotor = 8;
+    public static final int rightMiddleMotor = 31;
+    public static final int rightRearMotor = 30;
+
+    public static final int intakeWheelMotor = 14;
+
+    // Double solenoid ports
+
+    public static final int intakeLeftPiston = 1;
+    public static final int intakeRightPiston = 2;
+
+    public static final int cannon = 4;
+
+    public static final int climberLeft1 = 5;
+    public static final int climberLeft2 = 6;
+    public static final int climberRight1 = 7;
+    public static final int climberRight2 = 8;
+
+    // Sensors
+
+    public static final int cannonBeamBreak = 3;
+
+    // UI
+
+    public static final int driverXboxController = 1;
+    public static final int operatorXboxController = 2;
+
 
 }
